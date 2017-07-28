@@ -34,6 +34,7 @@ public class MetricValidator {
         if (!validateDots(name, allowDirs, isDir)) {
             return false;
         }
+        System.out.println("Search for metric:"+name);
         return metricPattern.matcher(name).matches();
     }
 
