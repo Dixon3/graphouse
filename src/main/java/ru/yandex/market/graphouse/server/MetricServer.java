@@ -101,7 +101,8 @@ public class MetricServer implements InitializingBean {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    int updatedSeconds = (int) (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
+                    int updatedSeconds = (int) (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));     
+                    log.info("Read line:" + line);
                     Metric metric = metricFactory.createMetric(line, updatedSeconds);
                     if (metric != null) {
                         metrics.add(metric);
@@ -115,6 +116,7 @@ public class MetricServer implements InitializingBean {
                 log.warn("Socket timeout from " + socket.getRemoteSocketAddress().toString());
             } finally {
                 socket.close();
+		log.info("Read metrics:" + metrics);
             }
             metricCacher.submitMetrics(metrics);
             metrics.clear();
