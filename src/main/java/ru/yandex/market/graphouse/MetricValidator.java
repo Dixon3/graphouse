@@ -2,11 +2,17 @@ package ru.yandex.market.graphouse;
 
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 /**
  * @author Dmitry Andreev <a href="mailto:AndreevDm@yandex-team.ru"/>
  * @date 27/05/15
  */
 public class MetricValidator {
+
+    private static final Logger log = LogManager.getLogger();
 
     private final Pattern metricPattern;
 
@@ -29,12 +35,14 @@ public class MetricValidator {
     public boolean validate(String name, boolean allowDirs) {
         boolean isDir = MetricUtil.isDir(name);
         if ((!isDir && name.length() < minMetricLength) || name.length() > maxMetricLength) {
+            log.info ("MAX lenght over:"+name);
             return false;
         }
         if (!validateDots(name, allowDirs, isDir)) {
+            log.info ("Incorrect dots:"+name);
             return false;
         }
-        System.out.println("Search for metric:"+name);
+        log.info("Search for metric:"+name);
         return metricPattern.matcher(name).matches();
     }
 
@@ -50,6 +58,7 @@ public class MetricValidator {
         int dotCount = 0;
         while ((dotIndex = name.indexOf('.', prevDotIndex + 1)) > 0) {
             if (prevDotIndex + 1 == dotIndex) {
+                log.info ("Two dots near:"+name);
                 return false; //Две точки подряд
             }
             prevDotIndex = dotIndex;
@@ -57,6 +66,7 @@ public class MetricValidator {
         }
 
         if ((!isDir && dotCount < minDots) || dotCount > maxDots) {
+            log.info ("So much dots:"+name);
             return false;
         }
         return true;

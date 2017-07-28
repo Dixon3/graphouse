@@ -12,6 +12,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author Dmitry Andreev <a href="mailto:AndreevDm@yandex-team.ru"></a>
  * @date 08/05/15
@@ -20,6 +23,7 @@ public class MetricFactory {
 
     private final MetricSearch metricSearch;
     private final MetricValidator metricValidator;
+    private static final Logger log = LogManager.getLogger();
 
     @Value("${graphouse.host-metric-redirect.enabled}")
     private boolean redirectHostMetrics = true;
@@ -47,6 +51,7 @@ public class MetricFactory {
 
         String[] splits = line.split(" ");
         if (splits.length != 3) {
+            log.info("Metrics more 3 spaces");
             return null;
         }
         String name = processName(splits[0]);
